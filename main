@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Bitcoin Value</title>
+    
+    
+</head>
+<body>
+
+    <p>Current Bitcoin Value: <span id="bitcoin-value"></span></p>
+    <script>
+
+          function updateCurrentValue(newValue)
+          {
+            var span = document.querySelector('#bitcoin-value');
+            span.innerHTML = newValue;
+
+
+            //Periodically repeat the process after every one minute that is 1000 milliseconds
+            var oneMinute = 60 * 1000;
+            setTimeout(getCurrentValue,oneMinute);
+
+          } 
+
+          function getCurrentValue()
+          {
+            var xhr = new XMLHttpRequest();
+            var url = "https://blockchain.info/q/24hrprice?cors=true";
+
+            xhr.onload= function()
+            {
+                var response = this.responseText;
+                var newValue = `${response} (USD)`;
+                updateCurrentValue(newValue);
+            };
+
+            xhr.onerror = function(e)
+            {
+                updateCurrentValue("Current Value of Bitcoin is unavailable at the moment");
+            };
+
+            xhr.open("GET",url);
+
+            xhr.send();
+          }
+
+
+
+    window.onload = function(){
+        getCurrentValue();
+    }
+    </script>
+</body>
+</html>
